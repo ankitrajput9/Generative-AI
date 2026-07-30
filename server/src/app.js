@@ -4,10 +4,13 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import authrouter from "./router/auth.router.js"
 import errormiddleware from "./middleware/error.middleware.js"
-
+import env from "./config/env.js"
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: env.VITE_CLIENT_URL ,
+    credentials: true
+}))
 app.use(express.json())
 app.use(cookieParser())
 

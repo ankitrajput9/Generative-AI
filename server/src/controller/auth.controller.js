@@ -58,7 +58,7 @@ export const registerController = async (req, res) => {
 export const loginController = async (req, res) => {
     try {
 
-        let { email, password } = req.body
+        let { email,password } = req.body
         if (!email || !password) {
             res.status(400).json({
                 message: "all fields require ",
@@ -66,7 +66,7 @@ export const loginController = async (req, res) => {
             })
         }
 
-        const user = await authmodel.findOne({ email: email.toLowerCase() })
+        const user = await authmodel.findOne({ email })
         if (!user) {
             res.status(400).json({
                 message: "user not exist! register first ",

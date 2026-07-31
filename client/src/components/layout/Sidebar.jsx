@@ -1,13 +1,10 @@
 import { NavLink } from 'react-router-dom';
+import ChatList from '../chat/ChatList';
 
-const links = [
-  { to: '/', label: 'Home' },
-  { to: '/login', label: 'Login' },
-  { to: '/register', label: 'Register' },
-];
+const links = [{ to: '/', label: 'Home' }];
 
 const Sidebar = () => (
-  <aside className="hidden w-64 border-r border-slate-200 bg-slate-50 p-6 md:block">
+  <aside className="hidden w-64 border-r border-slate-200 bg-slate-50 p-6 md:flex md:flex-col">
     <h2 className="mb-6 text-xl font-semibold">Generative AI</h2>
     <nav className="space-y-2">
       {links.map((link) => (
@@ -22,6 +19,9 @@ const Sidebar = () => (
         </NavLink>
       ))}
     </nav>
+    <div className="mt-6 flex-1 overflow-hidden">
+      <ChatList />
+    </div>
   </aside>
 );
 

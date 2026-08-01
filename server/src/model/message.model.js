@@ -8,14 +8,14 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
     author: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'auth',
-      required: true,
+      type: String,
+      enum:["user","ai"],
+      default:"user",
     },
     content: {
       type: String,
       required: true,
-      trim: true,
+    //   trim: true,
     },
   },
   {

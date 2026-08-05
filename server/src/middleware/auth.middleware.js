@@ -6,8 +6,11 @@ import env from "../config/env.js"
 
 
 const protect = (req,res,next)=>{
-
+    try {
+    
     let {token} = req.cookies
+
+    console.log(token)
 
     if(!token){
     return res.status(401).json({
@@ -15,8 +18,9 @@ const protect = (req,res,next)=>{
         status:false
     })
     }
-    try {
         const decode = jwt.verify(token , env.JWT_SECRET)
+       
+
         req.user = {id:decode.id}
         next()
     } catch (error) {

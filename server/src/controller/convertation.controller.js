@@ -2,7 +2,7 @@
 import convertationModel from "../model/convertation.model.js";
 import messageModel from "../model/message.model.js";
 
-const convertationController = async (req, res) => {
+export const convertationController = async (req, res) => {
 
     try {
         let { title } = req.body
@@ -26,7 +26,7 @@ const convertationController = async (req, res) => {
 }
 
 
-const getAllConvertation = async (req, res) => {
+export const getAllConvertation = async (req, res) => {
 
     try {
 
@@ -50,7 +50,7 @@ const getAllConvertation = async (req, res) => {
 
 
 
-const handleMessage = async (req, res) => {
+export const handleMessage = async (req, res) => {
     try {
         let { message, convertationId } = req.body
         let convertation = null
@@ -127,5 +127,4 @@ const handleMessage = async (req, res) => {
     }
 }
 
-export default { convertationController, getAllConvertation, handleMessage }
 

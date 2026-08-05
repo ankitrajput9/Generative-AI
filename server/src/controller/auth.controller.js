@@ -60,7 +60,7 @@ export const loginController = async (req, res) => {
 
         let { email,password } = req.body
         if (!email || !password) {
-            res.status(400).json({
+           return res.status(400).json({
                 message: "all fields require ",
                 status: false
             })
@@ -68,7 +68,7 @@ export const loginController = async (req, res) => {
 
         const user = await authmodel.findOne({ email })
         if (!user) {
-            res.status(400).json({
+           return res.status(400).json({
                 message: "user not exist! register first ",
                 status: false
             })
@@ -77,7 +77,7 @@ export const loginController = async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid) {
-            res.status(401).json({
+           return res.status(401).json({
                 messege: "unauthorize user ",
                 status: false
             })
@@ -86,7 +86,7 @@ export const loginController = async (req, res) => {
         const token = signIN(user._id)
         res.cookie("token", token)
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "user loged succesfully",
             ssatus: true,
             user

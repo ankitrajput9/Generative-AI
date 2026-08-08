@@ -3,7 +3,7 @@ import dotenv from "dotenv"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import authrouter from "./router/auth.router.js"
-import convertationrouter from "./router/convertation.router.js"
+import Conversationrouter from "./router/convertation.router.js"
 import errormiddleware from "./middleware/error.middleware.js"
 import env from "./config/env.js"
 const app = express()
@@ -24,7 +24,7 @@ app.get("/api/helth",(req,res)=>{
 
 
 app.use("/api/auth",authrouter)
-app.use("/api/convertation",convertationrouter)
+app.use("/api/conversation",Conversationrouter)
 
 
 

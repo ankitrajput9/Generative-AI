@@ -16,6 +16,8 @@
     "nodemon": "^3.1.14"
   },
   "dependencies": {
+    "@langchain/core": "^1.2.5",
+    "@langchain/mistralai": "^1.2.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",

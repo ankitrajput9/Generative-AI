@@ -1,5 +1,6 @@
-import {ChatMistralAI} from "langchain/mistralai"
-import {createAgent,tool, toolStrategy} from "langchain"
+import {ChatMistralAI} from "@langchain/mistralai"
+import {createAgent,tool, toolStrategy,HumanMessage} from "langchain"
+import {z} from "zod"
 import env from "../config/env.js"
 
 
@@ -10,7 +11,7 @@ const model = new ChatMistralAI({
 })
 
 
-async function generateTitle({message}){
+export async function generateTitle({message}){
 
 const agent = await createAgent({
     model,
@@ -21,7 +22,7 @@ const agent = await createAgent({
 })
 
 const response = await agent.invoke({
-    messeges:[
+    messages:[
         new HumanMessage(message)
     ]
 })
@@ -30,8 +31,7 @@ return response.structuredResponse.title
 }
 
 
-
- async function getStream ({message}){
+export async function getStream ({message}){
 
 const agent = await createAgent({
     model,
@@ -39,11 +39,11 @@ const agent = await createAgent({
 })
 
 const stream = agent.stream({
-    messeges:[
+    messages:[
         new HumanMessage(message)
     ],
 },{
-    streamMode:messages
+    streamMode:"messages"
 }
 
 

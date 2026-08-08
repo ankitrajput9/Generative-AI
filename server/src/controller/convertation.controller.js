@@ -1,20 +1,21 @@
-
-import convertationModel from "../model/convertation.model.js";
+import ConversationModel from "../model/convertation.model.js";
 import messageModel from "../model/message.model.js";
+import { generateTitle } from "../service/ai.service.js";
+import { getStream } from "../service/ai.service.js";
 
-export const convertationController = async (req, res) => {
+export const ConversationController = async (req, res) => {
 
     try {
         let { title } = req.body
 
-        let newConvertation = await convertationModel.create({
+        let newConversation = await ConversationModel.create({
             user: req.user.id,         //geting user from middleware
             title
         })
 
         res.status(201).json({
             status: "success",
-            data: newConvertation
+            data: newConversation
         })
     } catch (error) {
         console.log(error)
@@ -25,20 +26,19 @@ export const convertationController = async (req, res) => {
     }
 }
 
-
-export const getAllConvertation = async (req, res) => {
+export const getAllConversation = async (req, res) => {
 
     try {
 
-        const convertations = await convertationModel.find({ user: req.user.id }).sort({
+        const Conversations = await ConversationModel.find({ user: req.user.id }).sort({
             createdAt: -1
         })
         res.status(200).json({
             status: "success",
-            data: convertations
+            data: Conversations
         })
     } catch {
-        console.log(`error in get all convertation ${error}`)
+        console.log(`error in get all Conversation ${error}`)
         res.status(500).json({
             status: "error",
             message: error.message
@@ -52,41 +52,44 @@ export const getAllConvertation = async (req, res) => {
 
 export const handleMessage = async (req, res) => {
     try {
-        let { message, convertationId } = req.body
-        let convertation = null
-        if (!convertationId) {
+        let { message, ConversationId } = req.body
+        let conversation = null
+        if (!ConversationId) {
             const title = await generateTitle({ message })
-            convertation = await convertationModel.create({
+            conversation  = await ConversationModel.create({
                 user: req.user.id,
                 title
             })
         } else {
-            convertation = await convertationModel.findOne({
-                _id: convertationId,
+            conversation = await ConversationModel.findOne({
+                _id: ConversationId,
                 user: req.user.id
             })
         }
-
-        if (!convertation) {
+        
+        if (!conversation) {
             return res.status(404).json({
                 status: "error",
-                message: "convertation not found"
+                message: "Conversation not found"
             })
         }
+        console.log("hello0")
 
         let userMessage = await messageModel.create({
-            convertation: convertation._id,
+            conversation: conversation._id,
             content: message,
             author: "user"
         })
+        console.log("hello1")
 
         const stream = await getStream({ message })
 
+        console.log("hello2")
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
-        res.setHeader('X-Conversation-Id', convertation._id.toString());
-        res.setHeader('X-Conversation-Title', convertation.title);
+        res.setHeader('X-Conversation-Id', conversation._id.toString());
+        res.setHeader('X-Conversation-Title', conversation.title);
         res.setHeader('Access-Control-Expose-Headers', 'X-Conversation-Id, X-Conversation-Title');
 
         let assistantReply = '';
@@ -106,25 +109,24 @@ export const handleMessage = async (req, res) => {
 
         if (assistantReply.trim()) {
             await messageModel.create({
-                convertation: convertation._id,
+                conversation: conversation._id,
                 content: assistantReply,
                 author: "ai"
             })
 
-            await convertationModel.updateOne(
-                { _id: convertation._id },
+            await ConversationModel.updateOne(
+                { _id: conversation._id },
                 { $set: { updatedAt: new Date() } }
             )
 
             res.end()
         }
     } catch (error) {
-        console.log(`error in handle message ${error}`)
+        console.log(`error in Handlemessage ${error}`)
         res.status(500).json({
             status: "error",
             message: error.message
         })
     }
 }
-
 

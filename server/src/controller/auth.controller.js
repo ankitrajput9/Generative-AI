@@ -5,7 +5,7 @@ import authmodel from "../model/auth.model.js"
 import env from "../config/env.js"
 
 
-const signIN = (id) => { jwt.sign({ id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN }) }
+const signIN = (id) =>  jwt.sign({ id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN }) 
 export const registerController = async (req, res) => {
 
     try {

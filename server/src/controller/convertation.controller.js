@@ -60,9 +60,24 @@ export const getConversationMessages = async (req, res) => {
         }
 
         const messages = await messageModel.find({ conversation: conversationId }).sort({ createdAt: 1 });
+        const sanitized = messages.map((m) => {
+            let content = m.content || '';
+            if (content.includes('data:')) {
+                content = content.replace(/(^|\n)data:\s*/g, '$1').replace(/\s+data:\s+/g, ' ');
+            }
+            return {
+                _id: m._id,
+                conversation: m.conversation,
+                author: m.author,
+                content: content,
+                createdAt: m.createdAt,
+                updatedAt: m.updatedAt,
+            };
+        });
+
         res.status(200).json({
             status: "success",
-            data: messages
+            data: sanitized
         });
     } catch (error) {
         console.log(`error in getConversationMessages ${error}`);
@@ -139,16 +154,14 @@ export const handleMessage = async (req, res) => {
 
         for await (const [token, metadata] of stream) {
             const tokenText = token?.text || '';
+            if (!tokenText) continue;
             assistantReply += tokenText;
 
             process.stdout.write(tokenText);
-
-            const lines = tokenText.split('\n');
-            for (const line of lines) {
-                res.write(`data: ${line}\n`);
-            }
-            res.write('\n');
+            res.write(`data: ${JSON.stringify({ text: tokenText })}\n\n`);
         }
+
+        res.write('data: [DONE]\n\n');
 
         if (assistantReply.trim()) {
             await messageModel.create({
@@ -161,9 +174,9 @@ export const handleMessage = async (req, res) => {
                 { _id: conversation._id },
                 { $set: { updatedAt: new Date() } }
             )
-
-            res.end()
         }
+
+        res.end();
     } catch (error) {
         console.log(`error in Handlemessage ${error}`)
         res.status(500).json({

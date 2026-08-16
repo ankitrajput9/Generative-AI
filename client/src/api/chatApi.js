@@ -29,27 +29,37 @@ export async function sendChat({ message, ConversationId } = {}, onChunk) {
 	const decoder = new TextDecoder();
 	let buffer = '';
 
+	const processLine = (line) => {
+		const trimmed = line.trim();
+		if (!trimmed || !trimmed.startsWith('data:')) return;
+		const rawPayload = trimmed.replace(/^data:\s*/, '');
+		if (rawPayload === '[DONE]') return;
+
+		try {
+			const parsed = JSON.parse(rawPayload);
+			const chunk = typeof parsed === 'string' ? parsed : (parsed?.text ?? parsed?.content ?? '');
+			if (chunk) onChunk && onChunk(chunk);
+		} catch {
+			// Fallback if legacy raw text
+			onChunk && onChunk(rawPayload);
+		}
+	};
+
 	while (true) {
 		const { done, value } = await reader.read();
 		if (done) break;
 		buffer += decoder.decode(value, { stream: true });
 
-		// SSE events are separated by double newlines. Each event has lines like: "data: <text>"
-		const parts = buffer.split('\n\n');
-		buffer = parts.pop();
+		const lines = buffer.split('\n');
+		buffer = lines.pop() ?? '';
 
-		for (const part of parts) {
-			const m = part.match(/data: (.*)/s);
-			if (m) {
-				onChunk && onChunk(m[1]);
-			}
+		for (const line of lines) {
+			processLine(line);
 		}
 	}
 
-	// flush remainder
 	if (buffer) {
-		const m = buffer.match(/data: (.*)/s);
-		if (m) onChunk && onChunk(m[1]);
+		processLine(buffer);
 	}
 
 	return { conversationId, conversationTitle };

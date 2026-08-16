@@ -9,11 +9,16 @@ const Message = ({ message }) => {
   const isUser = message.sender === 'user';
   const content = message.text || '';
 
+  let cleanContent = content;
+  if (typeof cleanContent === 'string' && cleanContent.includes('data:')) {
+    cleanContent = cleanContent.replace(/(^|\n)data:\s*/g, '$1').replace(/\s+data:\s+/g, ' ');
+  }
+
   if (isUser) {
     return (
       <div className="flex w-full justify-end py-3 px-4">
         <div className="max-w-2xl rounded-full bg-[#f3f4f6] px-5 py-2.5 text-[14.5px] font-normal text-zinc-900 shadow-sm leading-relaxed">
-          <div className="whitespace-pre-wrap break-words">{content}</div>
+          <div className="whitespace-pre-wrap break-words">{cleanContent}</div>
         </div>
       </div>
     );
@@ -22,7 +27,7 @@ const Message = ({ message }) => {
   return (
     <div className="flex w-full flex-col items-start py-3 px-4 text-[#ececec]">
       <div className="w-full max-w-3xl">
-        {!content ? (
+        {!cleanContent ? (
           <TypingIndicator />
         ) : (
           <div className="chatgpt-markdown-body text-[15px] leading-relaxed">
@@ -33,7 +38,7 @@ const Message = ({ message }) => {
                 pre: ChatGPTPre,
               }}
             >
-              {content}
+              {cleanContent}
             </ReactMarkdown>
           </div>
         )}

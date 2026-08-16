@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, onClose }) => {
       {/* Top Header: ChatGPT Brand */}
       <div className="mb-4 flex items-center justify-between px-2 pt-2">
         <h1 className="text-xl font-bold tracking-tight text-white select-none">
-          ChatGPT
+          Codium
         </h1>
 
         {/* Mobile close button */}

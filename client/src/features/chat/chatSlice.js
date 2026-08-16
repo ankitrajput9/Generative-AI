@@ -109,12 +109,18 @@ export const loadConversation = (conversation) => async (dispatch) => {
   try {
     const res = await getConversationMessages(convId);
     if (res.data?.status === 'success' && res.data.data) {
-      const formattedMessages = res.data.data.map((m) => ({
-        id: m._id,
-        sender: m.author === 'ai' ? 'assistant' : 'user',
-        text: m.content,
-        createdAt: m.createdAt,
-      }));
+      const formattedMessages = res.data.data.map((m) => {
+        let text = m.content || '';
+        if (text.includes('data:')) {
+          text = text.replace(/(^|\n)data:\s*/g, '$1').replace(/\s+data:\s+/g, ' ');
+        }
+        return {
+          id: m._id,
+          sender: m.author === 'ai' ? 'assistant' : 'user',
+          text,
+          createdAt: m.createdAt,
+        };
+      });
       dispatch(
         setActiveConversation({
           id: convId,

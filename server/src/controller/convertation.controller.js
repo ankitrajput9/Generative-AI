@@ -27,9 +27,7 @@ export const ConversationController = async (req, res) => {
 }
 
 export const getAllConversation = async (req, res) => {
-
     try {
-
         const Conversations = await ConversationModel.find({ user: req.user.id }).sort({
             createdAt: -1
         })
@@ -37,16 +35,61 @@ export const getAllConversation = async (req, res) => {
             status: "success",
             data: Conversations
         })
-    } catch {
+    } catch (error) {
         console.log(`error in get all Conversation ${error}`)
         res.status(500).json({
             status: "error",
             message: error.message
         })
-
     }
-
 }
+
+export const getConversationMessages = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const conversation = await ConversationModel.findOne({
+            _id: conversationId,
+            user: req.user.id
+        });
+
+        if (!conversation) {
+            return res.status(404).json({
+                status: "error",
+                message: "Conversation not found"
+            });
+        }
+
+        const messages = await messageModel.find({ conversation: conversationId }).sort({ createdAt: 1 });
+        res.status(200).json({
+            status: "success",
+            data: messages
+        });
+    } catch (error) {
+        console.log(`error in getConversationMessages ${error}`);
+        res.status(500).json({
+            status: "error",
+            message: error.message
+        });
+    }
+};
+
+export const deleteConversationById = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        await messageModel.deleteMany({ conversation: conversationId });
+        await ConversationModel.deleteOne({ _id: conversationId, user: req.user.id });
+        res.status(200).json({
+            status: "success",
+            message: "Conversation deleted successfully"
+        });
+    } catch (error) {
+        console.log(`error in deleteConversationById ${error}`);
+        res.status(500).json({
+            status: "error",
+            message: error.message
+        });
+    }
+};
 
 
 

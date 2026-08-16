@@ -1,6 +1,8 @@
 import api from './axios';
 
 export const getConversations = () => api.get('/conversation/chat');
+export const getConversationMessages = (conversationId) => api.get(`/conversation/messages/${conversationId}`);
+export const deleteConversationApi = (conversationId) => api.delete(`/conversation/${conversationId}`);
 
 export async function sendChat({ message, ConversationId } = {}, onChunk) {
 	const base = (api && api.defaults && api.defaults.baseURL) || import.meta.env.VITE_API_URL || 'http://localhost:3000/api';

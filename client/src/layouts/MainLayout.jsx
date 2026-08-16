@@ -6,7 +6,7 @@ const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#212121] text-[#ececec]">
+    <div className="flex h-screen w-screen overflow-hidden bg-[#000000] text-[#ececec]">
       {/* Backdrop for mobile sidebar */}
       {isSidebarOpen && (
         <div

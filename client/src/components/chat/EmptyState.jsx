@@ -1,48 +1,5 @@
 const promptSuggestions = [
-  {
-    icon: (
-      <svg className="h-5 w-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
-    title: 'Brainstorm ideas',
-    desc: 'for a modern AI web application and core features',
-    prompt: 'Brainstorm 5 unique, high-value AI features for a modern web app, including practical use cases and user benefits.',
-  },
-  {
-    icon: (
-      <svg className="h-5 w-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 18 22 12 16 6" />
-        <polyline points="8 6 2 12 8 18" />
-      </svg>
-    ),
-    title: 'Code a Python script',
-    desc: 'to parse JSON data and visualize results',
-    prompt: 'Write a clean Python script to parse a JSON dataset, extract key metrics, and plot the distribution using matplotlib with syntax-highlighted code.',
-  },
-  {
-    icon: (
-      <svg className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9" />
-        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-      </svg>
-    ),
-    title: 'Help me write',
-    desc: 'a clear and engaging announcement post',
-    prompt: 'Draft an exciting launch announcement post for a new AI workspace product, formatted with markdown headings and bullet points.',
-  },
-  {
-    icon: (
-      <svg className="h-5 w-5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
-      </svg>
-    ),
-    title: 'Explain complex concepts',
-    desc: 'like quantum computing in simple terms',
-    prompt: 'Explain quantum computing, superposition, and quantum entanglement using simple, intuitive real-world analogies and markdown formatting.',
-  },
+ 
 ];
 
 const EmptyState = ({ onSelectPrompt }) => {

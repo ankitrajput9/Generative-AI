@@ -5,7 +5,7 @@ import authmodel from "../model/auth.model.js"
 import env from "../config/env.js"
 
 
-const signIN = (id) =>  jwt.sign({ id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN }) 
+const signIN = (id) => jwt.sign({ id }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN })
 export const registerController = async (req, res) => {
 
     try {
@@ -35,7 +35,12 @@ export const registerController = async (req, res) => {
         })
 
         const token = signIN(user._id)
-        res.cookie( "token",token)
+        // res.cookie( "token",token)
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,       // must be true — cross-site cookies require HTTPS
+            sameSite: 'none',   // must be 'none' — allows cross-domain cookie
+        });
 
         res.status(201).json({
             message: "User created successfully",
@@ -58,9 +63,9 @@ export const registerController = async (req, res) => {
 export const loginController = async (req, res) => {
     try {
 
-        let { email,password } = req.body
+        let { email, password } = req.body
         if (!email || !password) {
-           return res.status(400).json({
+            return res.status(400).json({
                 message: "all fields require ",
                 status: false
             })
@@ -68,7 +73,7 @@ export const loginController = async (req, res) => {
 
         const user = await authmodel.findOne({ email })
         if (!user) {
-           return res.status(400).json({
+            return res.status(400).json({
                 message: "user not exist! register first ",
                 status: false
             })
@@ -77,14 +82,19 @@ export const loginController = async (req, res) => {
 
         const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid) {
-           return res.status(401).json({
+            return res.status(401).json({
                 messege: "unauthorize user ",
                 status: false
             })
         }
 
         const token = signIN(user._id)
-        res.cookie("token", token)
+        // res.cookie("token", token)
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,       // must be true — cross-site cookies require HTTPS
+            sameSite: 'none',   // must be 'none' — allows cross-domain cookie
+        });
 
         return res.status(200).json({
             message: "user loged succesfully",

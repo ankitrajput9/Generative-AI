@@ -7,6 +7,7 @@ import Conversationrouter from "./router/convertation.router.js"
 import errormiddleware from "./middleware/error.middleware.js"
 import env from "./config/env.js"
 const app = express()
+app.set("trust proxy", 1)  
 
 app.use(cors({
     origin: env.VITE_CLIENT_URL ,
